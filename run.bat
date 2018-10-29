@@ -1,0 +1,1 @@
+..\..\rl\Scripts\python -m main --map=MoveToBeacon --training=True
