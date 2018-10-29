@@ -113,9 +113,9 @@ def _main(unused_argv):
   stopwatch.sw.enabled = FLAGS.profile or FLAGS.trace
   stopwatch.sw.trace = FLAGS.trace
 
-  maps.get(FLAGS.map)  # Assert the map exists.
+  maps.get(FLAGS.map)  
 
-  # Setup agents
+  
   agent_module, agent_name = FLAGS.agent.rsplit(".", 1)
   agent_cls = getattr(importlib.import_module(agent_module), agent_name)
 
@@ -138,7 +138,7 @@ def _main(unused_argv):
     global COUNTER
     COUNTER = agent.load_model(SNAPSHOT)
 
-  # Run threads
+ 
   threads = []
   for i in range(PARALLEL - 1):
     t = threading.Thread(target=run_thread, args=(agents[i], FLAGS.map, False))

@@ -13,7 +13,7 @@ import utils as U
 
 
 class A3CAgent(object):
-  """An agent specifically for solving the mini-game maps."""
+
   def __init__(self, training, msize, ssize, name='A3C/A3CAgent'):
     self.name = name
     self.training = training
@@ -36,7 +36,7 @@ class A3CAgent(object):
 
 
   def reset(self):
-    # Epsilon schedule
+    
     self.epsilon = [0.05, 0.2]
 
 
@@ -55,14 +55,14 @@ class A3CAgent(object):
       net = build_net(self.minimap, self.screen, self.info, self.msize, self.ssize, len(actions.FUNCTIONS), ntype)
       self.spatial_action, self.non_spatial_action, self.value = net
 
-      # Set targets and masks
+      
       self.valid_spatial_action = tf.placeholder(tf.float32, [None], name='valid_spatial_action')
       self.spatial_action_selected = tf.placeholder(tf.float32, [None, self.ssize**2], name='spatial_action_selected')
       self.valid_non_spatial_action = tf.placeholder(tf.float32, [None, len(actions.FUNCTIONS)], name='valid_non_spatial_action')
       self.non_spatial_action_selected = tf.placeholder(tf.float32, [None, len(actions.FUNCTIONS)], name='non_spatial_action_selected')
       self.value_target = tf.placeholder(tf.float32, [None], name='value_target')
 
-      # Compute log probability
+      # log probability
       spatial_action_prob = tf.reduce_sum(self.spatial_action * self.spatial_action_selected, axis=1)
       spatial_action_log_prob = tf.log(tf.clip_by_value(spatial_action_prob, 1e-10, 1.))
       non_spatial_action_prob = tf.reduce_sum(self.non_spatial_action * self.non_spatial_action_selected, axis=1)
@@ -73,7 +73,7 @@ class A3CAgent(object):
       self.summary.append(tf.summary.histogram('spatial_action_prob', spatial_action_prob))
       self.summary.append(tf.summary.histogram('non_spatial_action_prob', non_spatial_action_prob))
 
-      # Compute losses, more details in https://arxiv.org/abs/1602.01783
+     
       # Policy loss and value loss
       action_log_prob = self.valid_spatial_action * spatial_action_log_prob + non_spatial_action_log_prob
       advantage = tf.stop_gradient(self.value_target - self.value)
@@ -82,7 +82,7 @@ class A3CAgent(object):
       self.summary.append(tf.summary.scalar('policy_loss', policy_loss))
       self.summary.append(tf.summary.scalar('value_loss', value_loss))
 
-      # TODO: policy penalty
+     
       loss = policy_loss + value_loss
 
       # Build the optimizer
